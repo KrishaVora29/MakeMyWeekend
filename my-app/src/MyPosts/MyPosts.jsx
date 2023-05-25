@@ -42,7 +42,6 @@ export default function MyPosts(props) {
     let subtitle;
     const id = localStorage.getItem("userid")
     const username = localStorage.getItem("username")
-    const isUserAdmin = localStorage.getItem('userrole') === '6440c13146465b84798eca3f'
     const token = localStorage.getItem('JWT')
     const [likedPosts, setLikedPosts] = useState([]);
     const [selectedCity, setSelectedCity] = useState("");
@@ -52,15 +51,12 @@ export default function MyPosts(props) {
     const [category, setcategory] = useState('');
     const [showComments, setShowComments] = useState(false);
     const [Comment, setComment] = useState();
-    const [searchstring, setsearchstring] = useState("");
-
     const [slicedData, setSlicedData] = useState([]);
-
-    const sortedData = [...data];
-    const postsPerPage = 6;
-    const initialPage = 0;
     const [sortBy, setSortBy] = useState('default');
-    const [currentPage, setCurrentPage] = useState(initialPage);
+    const [pageNumber, setPageNumber] = useState("");
+    
+    const usersPerPage = 5;
+    let startIndex = pageNumber * usersPerPage;
     let post = {
         postBY: username,
         postID: id,
@@ -107,9 +103,6 @@ export default function MyPosts(props) {
         }
     };
 
-    const handlePageChange = ({ selected }) => {
-        setCurrentPage(selected);
-    };
 
     const fetchData = async () => {
         try {
@@ -126,14 +119,11 @@ export default function MyPosts(props) {
 
             // Filter posts by the logged-in user
             const filteredPosts = responses.filter(post => post.postID === id);
-            //console.log("Here......................",filteredPosts);
+            console.log("Here......................",filteredPosts);
 
             const likedPosts = filteredPosts.map(post => post.likedBY.includes(id) ? post._id : null).filter(Boolean);
             setdata(filteredPosts);
             setLikedPosts(likedPosts);
-            const startIndex = currentPage * postsPerPage;
-            const endIndex = startIndex + postsPerPage;
-            setSlicedData(data.slice(startIndex, endIndex));
         } catch (error) {
             console.error(error);
         }
@@ -141,7 +131,7 @@ export default function MyPosts(props) {
 
     useEffect(() => {
         fetchData();
-    }, [currentPage]);
+    }, []);
 
 
     const submit = async () => {
@@ -294,7 +284,7 @@ export default function MyPosts(props) {
             </div>
             <div className="small-container2">
                 <div className="row">
-                    {slicedData.map((post) => (
+                    {data.slice(startIndex, startIndex + usersPerPage).map((post) => (
                         <div className="col-4" key={post._id}>
                             <span className='username2'>{post.category}</span>
                             <h4 className='outerproducttitle'>{post.idea}</h4>
@@ -408,18 +398,23 @@ export default function MyPosts(props) {
                 </div>
 
             </Modal>
-            <ReactPaginate
-                previousLabel={'previous'}
-                nextLabel={'next'}
-                breakLabel={'...'}
-                breakClassName={'break-me'}
-                pageCount={Math.ceil(data.length / postsPerPage)}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageChange}
-                containerClassName={'pagination'}
-                activeClassName={'active'}
-            />
+            <div className='paginationtop'>
+                <ReactPaginate
+                    pageCount={Math.ceil(data?.length / usersPerPage)}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={({ selected }) => setPageNumber(selected)}
+                    containerClassName={'pagination'}
+                    activeClassName={'active'}
+                    pageClassName={'page-item'}
+                    pageLinkClassName={'page-link'}
+                    previousClassName={'page-item'}
+                    previousLinkClassName={'page-link'}
+                    nextClassName={'page-item'}
+                    nextLinkClassName={'page-link'}
+                />
+
+            </div>
 
             <Footer />
             <ToastContainer />

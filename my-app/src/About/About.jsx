@@ -52,10 +52,10 @@ export default function About() {
                                 As a dedicated adventurer at heart, I am committed to helping you uncover extraordinary weekend experiences that ignite your sense of wonder and create lasting memories.
                                 </p>
                                 <ul class="social">
-                                    <li><a href="#"><FaLinkedin /></a></li>
-                                    <li><a href="#"><FaTwitter /></a></li>
+                                    <li><a href="https://www.linkedin.com/in/harshparekh5818/?originalSubdomain=in"><FaLinkedin /></a></li>
+                                    <li><a href="https://twitter.com/harshparekh185/"><FaTwitter /></a></li>
                                     <li><a href="#"><FaFacebookSquare /></a></li>
-                                    <li><a href="#"><FaInstagram /></a></li>
+                                    <li><a href="https://www.instagram.com/harsh_.parekh/"><FaInstagram /></a></li>
                                 </ul>
                             </div>
                             <div class="team-info">
@@ -72,10 +72,10 @@ export default function About() {
                                 <p class="description">
                                 With a deep passion for exploration and a knack for curating the finest recommendations, I am thrilled to share my insights and inspire you to embark on remarkable weekend journeys.                                </p>
                                 <ul class="social">
-                                    <li><a href="#"><FaLinkedin /></a></li>
+                                    <li><a href="https://www.linkedin.com/in/krishavora/?originalSubdomain=in"><FaLinkedin /></a></li>
                                     <li><a href="#"><FaTwitter /></a></li>
                                     <li><a href="#"><FaFacebookSquare /></a></li>
-                                    <li><a href="#"><FaInstagram /></a></li>
+                                    <li><a href="https://www.instagram.com/krisha_vora_/"><FaInstagram /></a></li>
                                 </ul>
                             </div>
                             <div class="team-info">

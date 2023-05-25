@@ -9,7 +9,7 @@ export default function Footer(){
     let year = date.getFullYear();
     return(
         <div className="class">
-        <h4 className='copyright'>Copyright ©{year} | Harsh Parekh | <Clock format="HH:mm:ss A" interval={1000} ticking={true} /></h4>
+        <h4 className='copyright'>Copyright ©{year} | Krisha Vora | <Clock format="HH:mm:ss A" interval={1000} ticking={true} /></h4>
         </div>
         )
 }

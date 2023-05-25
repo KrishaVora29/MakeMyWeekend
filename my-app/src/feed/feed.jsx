@@ -12,6 +12,8 @@ import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { FaComment, FaPlus, FaTrash } from 'react-icons/fa';
 import $ from 'jquery';
+import ReactPaginate from 'react-paginate';
+
 
 
 cities.sort((a, b) => a.name.localeCompare(b.name));
@@ -53,32 +55,13 @@ export default function Feed(props) {
     const [Comment, setComment] = useState();
     const [searchstring, setsearchstring] = useState("");
     const [sortBy, setSortBy] = useState('default');
-    const sortedData = [...data]; 
-     
-    switch (sortBy) {
-        case 'price':
-          sortedData.sort((a, b) => {
-            const priceA = parseFloat(a.costpp);
-            const priceB = parseFloat(b.costpp);
-            if (priceA < priceB) {
-              return -1;
-            }
-            if (priceA > priceB) {
-              return 1;
-            }
-            return 0;
-          });
-          break;
-        case 'popularity':
-          sortedData.sort((a, b) => b.likedBY.length - a.likedBY.length);
-          break;
-        case 'comments':
-          sortedData.sort((a, b) => b.comments.length - a.comments.length);
-          break;
-        default:
-          break;
-      }
-      
+    const [posts, setPosts] = useState([]);
+    const [pageNumber, setPageNumber] = useState("");
+
+
+    const usersPerPage = 10;
+    let startIndex = pageNumber * usersPerPage;
+
 
     let post = {
         postBY: username,
@@ -159,6 +142,36 @@ export default function Feed(props) {
 
     console.log('data===========>', data);
 
+    const sortPosts = () => {
+        let sortedPosts = [...data];
+        switch (sortBy) {
+            case 'price':
+                sortedPosts.sort((a, b) => {
+                    const costA = parseInt(a.costpp.split('-')[0]);
+                    const costB = parseInt(b.costpp.split('-')[0]);
+                    return costA - costB;
+                });
+                break;
+            case 'popularity':
+                sortedPosts.sort((a, b) => b.likedBY.length - a.likedBY.length);
+                break;
+            case 'comments':
+                sortedPosts.sort((a, b) => b.comments.length - a.comments.length);
+                break;
+            default:
+                sortedPosts.sort(() => Math.random() - 0.5);
+                break;
+        }
+        
+        console.log("sorted posts-----", sortedPosts);
+
+        setdata(sortedPosts);
+    };
+
+    useEffect(() => {
+        sortPosts();
+        console.log("calllllllll");
+    }, [sortBy]);
 
 
     const submit = async () => {
@@ -333,19 +346,18 @@ export default function Feed(props) {
                         onChange={(event) => setsearchstring(event.target.value)}
                         onKeyUp={search}
                     />
-                    <select className='topsort' value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
-                        <option className='topsort2' value="default">Sort By Default</option>
-                        <option className='topsort2' value="price">Sort By Price</option>
-                        <option className='topsort2' value="popularity">Sort By Popularity</option>
-                        <option className='topsort2' value="comments">Sort By Comments</option>
+                    <select className='topsort' value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <option value="default" className='topsort2'>Sort By Default</option>
+                        <option value="price" className='topsort2'>Sort By Price</option>
+                        <option value="popularity" className='topsort2'>Sort By Popularity</option>
+                        <option value="comments" className='topsort2'>Sort By Comments</option>
                     </select>
-
                     <button className='postidea' onClick={opensecondModal}><FaPlus /> POST</button>
                 </div>
             </div>
             <div className="small-container2">
                 <div className="row">
-                    {sortedData.map((post) => (
+                    {data?.slice(startIndex, startIndex + usersPerPage).map((post) => (
                         <div className="col-4" key={post._id}>
                             <span className='username2'>{post.category}</span>
                             <h4 className='outerproducttitle'>{post.idea}</h4>
@@ -459,6 +471,23 @@ export default function Feed(props) {
                 </div>
 
             </Modal>
+            <div className='paginationtop'>
+                <ReactPaginate
+                    pageCount={Math.ceil(data?.length / usersPerPage)}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={({ selected }) => setPageNumber(selected)}
+                    containerClassName={'pagination'}
+                    activeClassName={'active'}
+                    pageClassName={'page-item'}
+                    pageLinkClassName={'page-link'}
+                    previousClassName={'page-item'}
+                    previousLinkClassName={'page-link'}
+                    nextClassName={'page-item'}
+                    nextLinkClassName={'page-link'}
+                />
+
+            </div>
             <Footer />
             <ToastContainer />
         </div>
